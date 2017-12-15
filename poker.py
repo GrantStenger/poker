@@ -31,10 +31,16 @@ class Card:
 	def __init__(self, number, suit):
 		self.number = number
 		self.suit = suit
+
 	def __repr__(self):
 		return (str(self.number) + " of " + str(self.suit) + "s")
+
 	def __str__(self):
 		return (str(self.number) + " of " + str(self.suit) + "s")
+
+	def __lt__(self, other_card):
+		numbers = [2,3,4,5,6,7,8,9,10,'Jack','Queen','King','Ace']
+		return numbers.index(self.number) < numbers.index(other_card.number)
 
 class PrivateHand:
 	def __init__(self, name):
@@ -89,8 +95,11 @@ def analyze(hole, community):
 	totalDiamonds = 0
 	totalHearts = 0
 	totalSpades = 0
+	flush = False
+	highCard = cards[0]
 
 	for card in cards:
+		# Count the number of cards per suit
 		if card.suit == "club":
 			totalClubs += 1
 		elif card.suit == "diamond":
@@ -100,6 +109,13 @@ def analyze(hole, community):
 		else:
 			totalSpades += 1
 
+		# Find high card
+		if highCard < card:
+			highCard = card
+
+	if totalClubs >= 5 or totalDiamonds >= 5 or totalHearts >= 5 or totalSpades >= 5:
+		flush = True
+
 
 	print("Analyze")
 	print(cards)
@@ -108,6 +124,8 @@ def analyze(hole, community):
 	print("Hearts: " + str(totalHearts))
 	print("Spades: " + str(totalSpades))
 	print()
+	print("Flush: " + str(flush))
+	print("High Card: " + str(highCard))
 
 clear = lambda: os.system('clear')
 clear()
