@@ -83,6 +83,31 @@ class CommunityCards:
 	def size(self):
 		return len(self.cards)
 
+def analyze(hole, community):
+	cards = hole.cards + community.cards
+	totalClubs = 0
+	totalDiamonds = 0
+	totalHearts = 0
+	totalSpades = 0
+
+	for card in cards:
+		if card.suit == "club":
+			totalClubs += 1
+		elif card.suit == "diamond":
+			totalDiamonds += 1
+		elif card.suit == "heart":
+			totalHearts += 1
+		else:
+			totalSpades += 1
+
+
+	print("Analyze")
+	print(cards)
+	print("Clubs: " + str(totalClubs))
+	print("Diamonds: " + str(totalDiamonds))
+	print("Hearts: " + str(totalHearts))
+	print("Spades: " + str(totalSpades))
+	print()
 
 clear = lambda: os.system('clear')
 clear()
@@ -128,6 +153,7 @@ if wantToPlay == "y":
 		CommunityCards.push(d.deal())
 		CommunityCards.push(d.deal())
 		CommunityCards.print()
+		analyze(player1, CommunityCards)
 
 		fold = input("Would you like to fold? [y/n] ")
 		if fold == "n":
@@ -138,6 +164,7 @@ if wantToPlay == "y":
 			# Deal the turn
 			CommunityCards.push(d.deal())
 			CommunityCards.print()
+			analyze(player1, CommunityCards)
 
 			fold = input("Would you like to fold? [y/n] ")
 			if fold == "n":
@@ -148,3 +175,4 @@ if wantToPlay == "y":
 				# Deal the river
 				CommunityCards.push(d.deal())
 				CommunityCards.print()
+				analyze(player1, CommunityCards)
