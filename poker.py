@@ -1,3 +1,7 @@
+"""
+Add low value of ace for straights
+"""
+
 import numpy as np
 import os
 
@@ -89,6 +93,29 @@ class CommunityCards:
 	def size(self):
 		return len(self.cards)
 
+def sortCards(cards):
+	newList = []
+	if cards[0] < cards[1]:
+		newList.append(cards[0])
+		newList.append(cards[1])
+	else:
+		newList.append(cards[1])
+		newList.append(cards[0])
+
+	for i in range(2, len(cards)):
+		j = 0
+		while j < len(newList):
+			if cards[i] < newList[j]:
+				newList.insert(j, cards[i])
+				j = len(newList)
+			else:
+				j += 1
+
+		if newList[len(newList)-1] < cards[i]:
+			newList.append(cards[i])
+	
+	return newList
+
 def analyze(hole, community):
 	cards = hole.cards + community.cards
 	totalClubs = 0
@@ -96,6 +123,7 @@ def analyze(hole, community):
 	totalHearts = 0
 	totalSpades = 0
 	flush = False
+	straight = False
 	highCard = cards[0]
 
 	for card in cards:
@@ -116,6 +144,23 @@ def analyze(hole, community):
 	if totalClubs >= 5 or totalDiamonds >= 5 or totalHearts >= 5 or totalSpades >= 5:
 		flush = True
 
+	# Check for straight
+	longestStraightLength = 1
+	currentStraightLength = 1
+	sortedCards = sortCards(cards)
+	numbers = [2,3,4,5,6,7,8,9,10,'Jack','Queen','King','Ace']
+	for i in range(1, len(sortedCards)):
+		if numbers.index(sortedCards[i-1].number) + 1 == numbers.index(sortedCards[i].number):
+			currentStraightLength += 1
+			if currentStraightLength > longestStraightLength:
+				longestStraightLength = currentStraightLength
+		elif numbers.index(sortedCards[i-1].number) == numbers.index(sortedCards[i].number):
+			currentStraightLength = currentStraightLength
+		else:
+			currentStraightLength = 1
+	if longestStraightLength >= 5:
+		straight = True
+
 
 	print("Analyze")
 	print(cards)
@@ -125,7 +170,9 @@ def analyze(hole, community):
 	print("Spades: " + str(totalSpades))
 	print()
 	print("Flush: " + str(flush))
+	print("Straight: " + str(straight))
 	print("High Card: " + str(highCard))
+	print(sortCards(cards))
 
 clear = lambda: os.system('clear')
 clear()
