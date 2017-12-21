@@ -1,10 +1,12 @@
 """
 Add low value of ace for straights
+Separate poker.py into several files
 """
 
 import numpy as np
 import os
 
+""" Classes """
 class Deck:
 	def __init__(self):
 		self.deck = []
@@ -93,6 +95,8 @@ class CommunityCards:
 	def size(self):
 		return len(self.cards)
 
+
+""" Functions """
 def sortCards(cards):
 	newList = []
 	if cards[0] < cards[1]:
@@ -174,6 +178,7 @@ def analyze(hole, community):
 	print("High Card: " + str(highCard))
 	print(sortCards(cards))
 
+""" main """
 clear = lambda: os.system('clear')
 clear()
 
